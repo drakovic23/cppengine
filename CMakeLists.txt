@@ -9,7 +9,8 @@ add_executable(BacktestEngine
 	src/BarData.cpp
 	src/SqliteHelper.cpp
 	src/OhlcMapper.cpp
-	src/StatCalculator.cpp
+	src/ReturnsCalculator.cpp
+	src/StatAccumulator.cpp
 )
 
 target_include_directories(BacktestEngine

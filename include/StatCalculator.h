@@ -7,5 +7,5 @@
 class StatCalculator
 {
 public:
-	static std::vector<double> calculateReturns(std::vector<BarData> barData);
+	static std::vector<double> calculateDescriptive(std::vector<BarData> barData);
 };

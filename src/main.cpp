@@ -7,7 +7,7 @@
 #include "BarData.h"
 #include "SqliteHelper.h"
 #include "OhlcMapper.h"
-#include "StatCalculator.h"
+#include "ReturnsCalculator.h"
 
 int main()
 {
@@ -17,12 +17,11 @@ int main()
 
 	std::vector<BarData> bars = mapper.mapOhlcData(db, "TSLA");
 	
-	std::vector<double> dailyReturns = StatCalculator::calculateReturns(bars);
-
-	for(const auto &val : dailyReturns)
-	{
-		std::cout << val << std::endl;
-	}
+	//std::vector<double> dailyReturns = StatCalculator::calculateReturns(bars);
+	
+	StatAccumulator accumulator{};
+	ReturnsCalculator::calculateReturns(bars, accumulator);
+	accumulator.test();
 	//std::tm tm_struct;
 	/*for(const auto &bar : bars){
 	

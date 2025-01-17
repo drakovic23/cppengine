@@ -36,3 +36,7 @@ build/
 
 #Cmake cache
 .cache/
+
+.idea/
+
+cmake-build-debug/
