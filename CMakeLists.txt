@@ -3,8 +3,12 @@ project(BacktestEngine LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(BacktestEngine
 	src/main.cpp
+	src/BarData.cpp
+	src/SqliteHelper.cpp
+	src/OhlcMapper.cpp
 )
 
 target_include_directories(BacktestEngine
