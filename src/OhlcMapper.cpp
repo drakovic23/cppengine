@@ -1,9 +1,9 @@
 #include <iostream>
 #include <chrono>
 
-#include "../include/OhlcMapper.h"
-#include "../include/SqliteHelper.h"
-#include "../include/BarData.h"
+#include "OhlcMapper.h"
+#include "SqliteHelper.h"
+#include "BarData.h"
 
 std::tm OhlcMapper::parseDateTime(const std::string& dateTimeStr)
 {
@@ -24,11 +24,13 @@ std::tm OhlcMapper::parseDateTime(const std::string& dateTimeStr)
 
 //This is a callback function used to map our OHLC data to our BarData class
 //Returns an empty Vector on error
-std::vector<BarData> OhlcMapper::mapOhlcData(SqliteHelper& sqliteHelper)
+std::vector<BarData> OhlcMapper::mapOhlcData(SqliteHelper& sqliteHelper, std::string tickerId)
 {
 	std::vector<BarData> bars; //BARS FOR DAYS
-	const char* selectSQL = "SELECT open, high, low, close, volume, date FROM Ohlc ORDER BY date ASC;";
+	const char* selectSQL =  
+		R"SQL(SELECT open, high, low, close, volume, date FROM Ohlc WHERE ticker_id = ? ORDER BY date ASC;)SQL";
 	
+
 	sqlite3_stmt* stmt = nullptr;
 	int rc = sqlite3_prepare_v2(sqliteHelper.getDb(), selectSQL, -1, &stmt, nullptr);
 	if(rc != SQLITE_OK)
@@ -36,6 +38,8 @@ std::vector<BarData> OhlcMapper::mapOhlcData(SqliteHelper& sqliteHelper)
 		std::cerr << "Error preparing statement: " << sqlite3_errmsg(sqliteHelper.getDb()) << std::endl;			
 			return bars; //Returns empty vector on error
 	}
+
+	sqlite3_bind_text(stmt, 1, tickerId.c_str(), -1, SQLITE_TRANSIENT);
 	
 	while((rc = sqlite3_step(stmt)) == SQLITE_ROW)
 	{
@@ -45,7 +49,6 @@ std::vector<BarData> OhlcMapper::mapOhlcData(SqliteHelper& sqliteHelper)
 		double close = sqlite3_column_double(stmt, 3); 
 		long volume = sqlite3_column_int64(stmt, 4);
 
-		// Since SQL orders our data, we may not need to actually care about the date type
 		const unsigned char* dateText = sqlite3_column_text(stmt, 5);
 		std::tm tm{};
 		if(dateText)

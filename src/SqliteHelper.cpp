@@ -1,4 +1,4 @@
-#include <../include/SqliteHelper.h>
+#include "SqliteHelper.h"
 
 #include <sqlite3.h>
 #include <iostream>

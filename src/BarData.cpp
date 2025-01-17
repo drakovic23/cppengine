@@ -1,5 +1,5 @@
 #include <chrono>
-#include "../include/BarData.h"
+#include "BarData.h"
 
 BarData::BarData(double open, double high, double low, double close, long vol, std::chrono::system_clock::time_point date)
 	{

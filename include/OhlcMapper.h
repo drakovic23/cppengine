@@ -12,5 +12,5 @@ private:
 public:
 	//This is a callback function used to map our OHLC data to our BarData class
 	//Returns an empty Vector on error
-	std::vector<BarData> mapOhlcData(SqliteHelper& sqliteHelper);
+	std::vector<BarData> mapOhlcData(SqliteHelper& sqliteHelper, std::string tickerId);
 };

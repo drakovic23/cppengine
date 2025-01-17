@@ -2,20 +2,12 @@
 #include <sqlite3.h>
 #include <vector>
 #include <ctime>
-#include <iomanip>
-#include <chrono>
-#include <format>
 #include <string>
 
-#include "../include/BarData.h"
-#include "../include/SqliteHelper.h"
-#include "../include/OhlcMapper.h"
-class IStrategy{
-	virtual void onBar (const BarData& bar);
-	virtual bool shouldEnterTrade() const = 0;
-	virtual bool shouldExitTrade() const = 0;
-};
-
+#include "BarData.h"
+#include "SqliteHelper.h"
+#include "OhlcMapper.h"
+#include "StatCalculator.h"
 
 int main()
 {
@@ -23,14 +15,20 @@ int main()
 
 	OhlcMapper mapper;
 
-	std::vector<BarData> bars = mapper.mapOhlcData(db);
+	std::vector<BarData> bars = mapper.mapOhlcData(db, "TSLA");
 	
-	std::tm tm_struct;
-	for(const auto &bar : bars){
+	std::vector<double> dailyReturns = StatCalculator::calculateReturns(bars);
+
+	for(const auto &val : dailyReturns)
+	{
+		std::cout << val << std::endl;
+	}
+	//std::tm tm_struct;
+	/*for(const auto &bar : bars){
 	
 	// Printing date
-	//std::string s = std::format("{:%Y-%m-%d}", bar.dateTest);
-	//	std::cout << "Date : " << s << std::endl;
-	}
+	std::string s = std::format("{:%Y-%m-%d}", bar.dateTest);
+		std::cout << "Date : " << s << std::endl;
+	}*/
 	return 0;
 }
